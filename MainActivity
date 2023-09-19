@@ -1,0 +1,99 @@
+package com.example.controldenotas;
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.Toast;
+
+public class MainActivity extends AppCompatActivity {
+
+    private EditText editTextNombre, editTextNota1, editTextNota2, editTextNota3, editTextNota4;
+    private Button btnCalcular, btnLimpiar;
+    private CheckBox checkBoxPerdido;
+    private RadioButton radioButtonAprobado, radioButtonReprobado;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Vincular elementos de la interfaz con objetos Java
+        editTextNombre = findViewById(R.id.editTextNombre);
+        editTextNota1 = findViewById(R.id.editTextNota1);
+        editTextNota2 = findViewById(R.id.editTextNota2);
+        editTextNota3 = findViewById(R.id.editTextNota3);
+        editTextNota4 = findViewById(R.id.editTextNota4);
+        btnCalcular = findViewById(R.id.btnCalcular);
+        btnLimpiar = findViewById(R.id.btnLimpiar);
+        checkBoxPerdido = findViewById(R.id.checkBoxPerdido);
+        radioButtonAprobado = findViewById(R.id.radioButtonAprobado);
+        radioButtonReprobado = findViewById(R.id.radioButtonReprobado);
+
+        // Configurar el botón para realizar los cálculos
+        btnCalcular.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                calcularNotaDefinitiva();
+            }
+        });
+        // Configurar el botón para limpiar los campos
+        btnLimpiar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                limpiarCampos();
+            }
+        });
+    }
+
+    private void calcularNotaDefinitiva() {
+        // Obtener las notas ingresadas como texto
+        String strNota1 = editTextNota1.getText().toString();
+        String strNota2 = editTextNota2.getText().toString();
+        String strNota3 = editTextNota3.getText().toString();
+        String strNota4 = editTextNota4.getText().toString();
+
+        // Validar que se ingresaron notas
+        if (strNota1.isEmpty() || strNota2.isEmpty() || strNota3.isEmpty() || strNota4.isEmpty()) {
+            Toast.makeText(this, "Ingrese todas las notas.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Convertir las notas a números
+        double nota1 = Double.parseDouble(strNota1);
+        double nota2 = Double.parseDouble(strNota2);
+        double nota3 = Double.parseDouble(strNota3);
+        double nota4 = Double.parseDouble(strNota4);
+
+        // Calcular la nota definitiva
+        double notaDefinitiva = (nota1 * 0.20) + (nota2 * 0.30) + (nota3 * 0.15) + (nota4 * 0.35);
+
+        // Mostrar la nota definitiva en un mensaje
+        Toast.makeText(this, "Nota Definitiva: " + notaDefinitiva, Toast.LENGTH_SHORT).show();
+
+        // Verificar si el estudiante perdió la materia
+        if (notaDefinitiva < 3.0) {
+            checkBoxPerdido.setChecked(true);
+            radioButtonReprobado.setChecked(true);
+        } else {
+            checkBoxPerdido.setChecked(false);
+            radioButtonAprobado.setChecked(true);
+        }
+    }
+    private void limpiarCampos() {
+        // Limpiar todos los campos de entrada y opciones
+        editTextNombre.setText("");
+        editTextNota1.setText("");
+        editTextNota2.setText("");
+        editTextNota3.setText("");
+        editTextNota4.setText("");
+        checkBoxPerdido.setChecked(false);
+        radioButtonAprobado.setChecked(false);
+        radioButtonReprobado.setChecked(false);
+
+        // Mostrar un mensaje de confirmación
+        Toast.makeText(this, "Campos limpiados", Toast.LENGTH_SHORT).show();
+    }
+}
